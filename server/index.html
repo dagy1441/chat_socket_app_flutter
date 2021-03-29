@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Socket IO</title>
+    <script src="./node_modules/socket.io/client-dist/socket.io.js"></script>
+</head>
+
+<body>
+    <div class="userlist">
+        <ul id="users"></ul>
+    </div>
+    <div class="messages">
+        <ul id="msgs"></ul>
+    </div>
+    <div class="input_messsage">
+        <input type="text" name="name" id="name">
+        <input type="button" value="connection" onclick="getConnection();">
+    </div>
+</body>
+<script>
+    const socket = io("http://172.31.240.102:3000");
+    socket.on("greeting", (data) => {
+        var user = document.createElement("li");
+        var psn = data.msg + data.user;
+        user.appendChild(document.createTextNode(psn));
+        document.getElementById("users").appendChild(user);
+    });
+    socket.on("msg", (data) => {
+        var msg = document.createElement("li");
+        var psn = data.msg
+        msg.appendChild(document.createTextNode(psn));
+        document.getElementById("msgs").appendChild(msg);
+    });
+    function getConnection() {
+        var name = document.getElementById("name").value;
+        socket.emit('msg', { msg: name, type: 'text' });
+    }
+</script>
+
+</html>
